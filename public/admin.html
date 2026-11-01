@@ -2,23 +2,1102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title data-wl-brand>APEX POS // Day-End Z-Report & Khata Ledger</title>
-  <link rel="stylesheet" href="theme-tokens.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-brand="brand_name">Apex Retail POS & Billing Terminal (GST & Khata)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="whitelabel.js"></script>
   <style>
-    body { background: #0F172A; color: #FFF; font-family: monospace; padding: 24px; }
-    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 20px 0; }
-    .kpi-c { background: #1E293B; border: 1px solid #334155; padding: 16px; border-radius: 8px; }
+    :root {
+      --bg-terminal: #0b0f19;
+      --bg-surface: #111827;
+      --bg-elevated: #1f2937;
+      --border-subtle: #374151;
+      --border-focus: #6366f1;
+      --color-primary: #4f46e5;
+      --color-primary-hover: #4338ca;
+      --color-emerald: #10b981;
+      --color-amber: #f59e0b;
+      --color-rose: #f43f5e;
+      --color-sky: #0ea5e9;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --font-mono: 'JetBrains Mono', 'DM Mono', monospace;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-terminal);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP CASHIER BAR */
+    .topbar {
+      height: 52px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+      background: var(--color-primary);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: #fff;
+    }
+    .brand-name {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+    }
+    .badge-terminal {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--color-emerald);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+    .pos-shortcuts-hint {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .kbd-chip {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+    .cashier-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 12px;
+    }
+    .z-report-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .z-report-btn:hover { background: var(--bg-elevated); color: #fff; }
+
+    /* POS GRID LAYOUT */
+    .pos-grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      flex: 1;
+      height: calc(100vh - 52px);
+      overflow: hidden;
+    }
+
+    /* LEFT CATALOG & BARCODE ZONE */
+    .left-zone {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border-subtle);
+      background: var(--bg-terminal);
+      overflow: hidden;
+    }
+
+    /* SCANNER STRIP */
+    .scanner-strip {
+      padding: 12px 16px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .scan-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+    .scan-input-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+    }
+    .scan-input {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 2px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 10px 12px 10px 38px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .scan-input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    .cat-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 10px 16px;
+      background: var(--bg-terminal);
+      border-bottom: 1px solid var(--border-subtle);
+      overflow-x: auto;
+    }
+    .cat-tab {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .cat-tab.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #fff;
+    }
+
+    /* PRODUCTS GRID */
+    .products-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      align-content: start;
+    }
+    .prod-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .prod-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .prod-sku {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+    .prod-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+    .prod-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border-subtle);
+    }
+    .prod-price {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 14px;
+      color: #38bdf8;
+    }
+    .prod-stock {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--color-emerald);
+      background: rgba(16, 185, 129, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .prod-gst {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+      background: var(--bg-elevated);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    /* RIGHT BILLING REGISTER */
+    .right-zone {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-surface);
+      height: 100%;
+    }
+
+    /* CUSTOMER SELECTION STRIP */
+    .cust-strip {
+      padding: 12px 16px;
+      background: #0f172a;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cust-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .cust-select {
+      flex: 1;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      outline: none;
+    }
+    .khata-badge {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--color-amber);
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* CART ITEMS TABLE */
+    .cart-header {
+      padding: 8px 16px;
+      background: rgba(31, 41, 55, 0.5);
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: grid;
+      grid-template-columns: 1fr 50px 70px 70px 24px;
+      gap: 8px;
+    }
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 1fr 50px 70px 70px 24px;
+      gap: 8px;
+      align-items: center;
+      padding: 8px;
+      background: var(--bg-elevated);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+    .cart-item-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cart-item-hsn {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+    }
+    .cart-qty-input {
+      width: 100%;
+      background: var(--bg-terminal);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-align: center;
+      padding: 4px 0;
+      border-radius: 4px;
+    }
+    .cart-item-rate {
+      font-family: var(--font-mono);
+      text-align: right;
+      color: var(--text-muted);
+    }
+    .cart-item-total {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-align: right;
+      color: #fff;
+    }
+    .cart-item-del {
+      background: none;
+      border: none;
+      color: var(--color-rose);
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* TOTALS & TAX BREAKDOWN */
+    .cart-summary {
+      padding: 14px 16px;
+      background: #0f172a;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sum-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .sum-row.grand {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border-subtle);
+    }
+    .sum-val {
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    /* TENDER ACTION BUTTONS */
+    .tender-actions {
+      padding: 12px 16px;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .tender-btn {
+      padding: 12px 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-elevated);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-weight: 700;
+      font-size: 12px;
+      transition: all 0.15s;
+    }
+    .tender-btn .kbd {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+    }
+    .tender-btn.cash:hover { background: #065f46; border-color: var(--color-emerald); }
+    .tender-btn.upi:hover { background: #075985; border-color: var(--color-sky); }
+    .tender-btn.khata:hover { background: #92400e; border-color: var(--color-amber); }
+    .tender-btn.print:hover { background: #4338ca; border-color: var(--color-primary); }
+
+    /* MODAL OVERLAY */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      width: 440px;
+      max-width: 90vw;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    /* THERMAL RECEIPT PREVIEW */
+    .thermal-paper {
+      background: #fffff8;
+      color: #111;
+      font-family: 'JetBrains Mono', 'DM Mono', monospace;
+      font-size: 11px;
+      line-height: 1.4;
+      padding: 20px 16px;
+      border-radius: 4px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    .thermal-paper .center { text-align: center; }
+    .thermal-paper .divider { border-bottom: 1px dashed #444; margin: 8px 0; }
+    .thermal-paper .double-divider { border-bottom: 2px dashed #000; margin: 8px 0; }
+    .thermal-paper .flex { display: flex; justify-content: space-between; }
   </style>
 </head>
 <body data-layout-archetype="tactile-pos-admin">
-  <h2><span data-wl-brand>APEX POS</span> — Day-End Cashier Z-Report & Khata Audit</h2>
-  <div class="kpi-row">
-    <div class="kpi-c"><div>DAILY GROSS SALES</div><div style="font-size:24px; font-weight:700;">₹48,920.00</div></div>
-    <div class="kpi-c"><div>CASH IN REGISTER</div><div style="font-size:24px; font-weight:700; color:#10B981;">₹21,400.00</div></div>
-    <div class="kpi-c"><div>UPI SETTLEMENTS</div><div style="font-size:24px; font-weight:700; color:#38BDF8;">₹24,520.00</div></div>
-    <div class="kpi-c"><div>KHATA UNPAID BALANCE</div><div style="font-size:24px; font-weight:700; color:#F59E0B;">₹3,000.00</div></div>
+
+  <!-- TOP HEADER -->
+  <header class="topbar">
+    <div class="brand-section">
+      <div class="brand-logo" data-wl-brand-char>A</div>
+      <div class="brand-name" data-brand="brand_name">Apex Retail POS</div>
+      <span class="badge-terminal">TERMINAL-01 // GST ACTIVE</span>
+    </div>
+
+    <div class="pos-shortcuts-hint">
+      <span><span class="kbd-chip">F2</span> Barcode</span>
+      <span><span class="kbd-chip">F4</span> Cash Tender</span>
+      <span><span class="kbd-chip">F8</span> Dynamic UPI</span>
+      <span><span class="kbd-chip">F9</span> Print 80mm</span>
+      <span><span class="kbd-chip">ESC</span> Clear</span>
+    </div>
+
+    <div class="cashier-info">
+      <span style="color:var(--text-muted);">Cashier: <strong>Ramesh (Shift A)</strong></span>
+      <button class="z-report-btn" onclick="openZReportModal()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        Z-Report Audit
+      </button>
+      <a href="index.html" class="z-report-btn" style="text-decoration:none;">
+        Customer Bill Portal &rarr;
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN TWO-COLUMN POS INTERFACE -->
+  <div class="pos-grid">
+    
+    <!-- LEFT: CATALOG & QUICK ADD -->
+    <div class="left-zone">
+      <!-- BARCODE / SEARCH STRIP -->
+      <div class="scanner-strip">
+        <div class="scan-input-wrap">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" id="barcodeInput" class="scan-input" placeholder="Scan Barcode (EAN-13) or Search Item Name / SKU [F2]..." autofocus>
+        </div>
+      </div>
+
+      <!-- CATEGORY TABS -->
+      <div class="cat-tabs" id="catTabs">
+        <button class="cat-tab active" onclick="filterCat('all')">All Products</button>
+        <button class="cat-tab" onclick="filterCat('grocery')">Grocery & Staples</button>
+        <button class="cat-tab" onclick="filterCat('dairy')">Dairy & Beverages</button>
+        <button class="cat-tab" onclick="filterCat('snacks')">Snacks & Biscuits</button>
+        <button class="cat-tab" onclick="filterCat('personal')">Personal Care</button>
+      </div>
+
+      <!-- PRODUCTS CARD MATRIX -->
+      <div class="products-container" id="productsGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- RIGHT: BILLING REGISTER & CART -->
+    <div class="right-zone">
+      <!-- CUSTOMER & KHATA SELECTOR -->
+      <div class="cust-strip">
+        <div class="cust-row">
+          <select id="custSelect" class="cust-select" onchange="handleCustomerChange()">
+            <option value="walkin">Walk-in Customer (Cash / UPI)</option>
+            <option value="cust_1" data-khata="1250" data-limit="5000">Ramesh Kumar (Khata: ₹1,250 / ₹5,000)</option>
+            <option value="cust_2" data-khata="3400" data-limit="10000">Priya Sharma (Khata: ₹3,400 / ₹10,000)</option>
+            <option value="cust_3" data-khata="0" data-limit="3000">Amit Verma (Khata: ₹0 / ₹3,000)</option>
+          </select>
+          <div class="khata-badge" id="khataIndicator" style="display:none;">
+            <span>KHATA:</span>
+            <strong id="khataBal">₹0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- CART HEADER -->
+      <div class="cart-header">
+        <div>Item</div>
+        <div style="text-align:center;">Qty</div>
+        <div style="text-align:right;">Rate</div>
+        <div style="text-align:right;">Amount</div>
+        <div></div>
+      </div>
+
+      <!-- CART ITEMS LIST -->
+      <div class="cart-items" id="cartContainer">
+        <!-- Cart rows rendered dynamically -->
+      </div>
+
+      <!-- CART TOTALS & GST BREAKDOWN -->
+      <div class="cart-summary">
+        <div class="sum-row">
+          <span>Items / Total Pcs:</span>
+          <span class="sum-val" id="sumQty">0 items (0 pcs)</span>
+        </div>
+        <div class="sum-row">
+          <span>Taxable Amount:</span>
+          <span class="sum-val" id="sumTaxable">₹0.00</span>
+        </div>
+        <div class="sum-row">
+          <span>CGST + SGST Split:</span>
+          <span class="sum-val" id="sumGst">₹0.00</span>
+        </div>
+        <div class="sum-row">
+          <span>Round Off:</span>
+          <span class="sum-val" id="sumRound">₹0.00</span>
+        </div>
+        <div class="sum-row grand">
+          <span>NET PAYABLE:</span>
+          <span class="sum-val" style="color:var(--color-emerald);" id="grandTotal">₹0.00</span>
+        </div>
+      </div>
+
+      <!-- TENDER ACTION SHORTCUTS -->
+      <div class="tender-actions">
+        <button class="tender-btn cash" onclick="openCashModal()">
+          <span>CASH</span>
+          <span class="kbd">F4</span>
+        </button>
+        <button class="tender-btn upi" onclick="openUpiModal()">
+          <span>UPI QR</span>
+          <span class="kbd">F8</span>
+        </button>
+        <button class="tender-btn khata" onclick="tenderKhata()">
+          <span>KHATA</span>
+          <span class="kbd">Credit</span>
+        </button>
+        <button class="tender-btn print" onclick="openPrintModal()">
+          <span>PRINT 80MM</span>
+          <span class="kbd">F9</span>
+        </button>
+      </div>
+
+    </div>
+
   </div>
-  <a href="index.html" style="color:var(--color-primary);">&larr; Return to Touch Cashier Register</a>
+
+  <!-- CASH TENDER MODAL -->
+  <div class="modal-overlay" id="cashModal">
+    <div class="modal-box">
+      <h3 style="margin-bottom:12px; font-size:18px;">Cash Tender & Change Due</h3>
+      <div style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Bill Total: <strong id="cashModalTotal" style="color:#fff; font-size:16px;">₹0.00</strong></div>
+      
+      <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:6px;">Cash Received from Customer (₹):</label>
+      <input type="number" id="cashReceivedInput" style="width:100%; background:var(--bg-elevated); border:2px solid var(--border-subtle); color:#fff; font-family:var(--font-mono); font-size:20px; font-weight:700; padding:10px; border-radius:6px; margin-bottom:16px;" placeholder="0" oninput="calcChangeDue()">
+
+      <div style="background:#0f172a; padding:12px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border-subtle);">
+        <div style="font-size:12px; color:var(--text-muted);">Change to Return:</div>
+        <div id="changeDueDisplay" style="font-family:var(--font-mono); font-size:24px; font-weight:800; color:var(--color-emerald);">₹0.00</div>
+      </div>
+
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button onclick="closeModals()" style="padding:10px 16px; background:transparent; border:1px solid var(--border-subtle); color:#fff; border-radius:6px; cursor:pointer;">Cancel (Esc)</button>
+        <button onclick="completeCashSale()" style="padding:10px 20px; background:var(--color-emerald); border:none; color:#fff; font-weight:700; border-radius:6px; cursor:pointer;">Complete & Open Drawer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DYNAMIC UPI QR MODAL -->
+  <div class="modal-overlay" id="upiModal">
+    <div class="modal-box" style="text-align:center;">
+      <h3 style="margin-bottom:6px; font-size:18px;">Dynamic Bharat UPI Payment</h3>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Scan with GPay, PhonePe, Paytm or BHIM UPI</p>
+
+      <div style="background:#fff; padding:16px; border-radius:12px; display:inline-block; margin-bottom:16px;">
+        <!-- Dynamic QR SVG representation -->
+        <svg width="180" height="180" viewBox="0 0 200 200" fill="#000">
+          <rect width="200" height="200" fill="#fff"/>
+          <path d="M10 10h60v60H10zm10 10v40h40V20zm10 10h20v20H30zm100-20h60v60h-60zm10 10v40h40V20zm10 10h20v20h-20zM10 130h60v60H10zm10 10v40h40v-40zm10 10h20v20H30zm80-30h10v20h-10zm20 0h20v10h-20zm30 0h20v30h-10v-20h-10zm-30 20h20v20h-10v-10h-10zm30 10h10v20h-10zm-60 10h20v10h-20zm30 10h20v20h-20zm-40 0h10v20h-10zm50 0h20v10h-20zm-20 10h10v10h-10z"/>
+          <!-- Apex Center Pill -->
+          <rect x="75" y="75" width="50" height="50" rx="8" fill="#4f46e5"/>
+          <text x="100" y="105" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle" font-family="sans-serif">UPI</text>
+        </svg>
+      </div>
+
+      <div style="font-family:var(--font-mono); font-size:22px; font-weight:800; color:var(--color-sky); margin-bottom:6px;" id="upiAmountDisplay">₹0.00</div>
+      <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:16px;">VPA: apexretail@icici | Ref: TXN-89324</div>
+
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button onclick="closeModals()" style="padding:10px 16px; background:transparent; border:1px solid var(--border-subtle); color:#fff; border-radius:6px; cursor:pointer;">Cancel (Esc)</button>
+        <button onclick="simulateUpiSuccess()" style="padding:10px 20px; background:var(--color-sky); border:none; color:#fff; font-weight:700; border-radius:6px; cursor:pointer;">Simulate Instant Webhook Pay</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 80MM THERMAL RECEIPT MODAL -->
+  <div class="modal-overlay" id="printModal">
+    <div class="modal-box" style="width:380px;">
+      <div class="thermal-paper" id="thermalSlip">
+        <div class="center" style="font-weight:700; font-size:14px;" data-brand="brand_name">APEX SUPERMARKET</div>
+        <div class="center" style="font-size:10px;">GSTIN: 29AAAAA0000A1Z5 | HSN COMPLIANT</div>
+        <div class="center" style="font-size:10px;">12th Main Road, Indiranagar, Bengaluru</div>
+        <div class="center" style="font-size:10px;">Ph: +91 98765 43210</div>
+        
+        <div class="divider"></div>
+        <div class="flex"><span>Inv: #INV-2026-8842</span><span id="slipDate"></span></div>
+        <div class="flex"><span>Cashier: Ramesh</span><span>POS: 01</span></div>
+        <div class="flex"><span id="slipCust">Cust: Walk-in</span><span id="slipPayMode">Pay: Cash</span></div>
+        
+        <div class="divider"></div>
+        <div class="flex" style="font-weight:700;">
+          <span style="flex:2;">ITEM</span>
+          <span style="flex:1; text-align:center;">QTY</span>
+          <span style="flex:1; text-align:right;">RATE</span>
+          <span style="flex:1; text-align:right;">AMT</span>
+        </div>
+        <div class="divider"></div>
+
+        <div id="slipItems">
+          <!-- Items inserted here -->
+        </div>
+
+        <div class="divider"></div>
+        <div class="flex"><span>Sub Total (Excl. Tax):</span><span id="slipSubtotal">₹0.00</span></div>
+        <div class="flex"><span>CGST (2.5% / 6% / 9%):</span><span id="slipCgst">₹0.00</span></div>
+        <div class="flex"><span>SGST (2.5% / 6% / 9%):</span><span id="slipSgst">₹0.00</span></div>
+        <div class="flex"><span>Round Off:</span><span id="slipRound">₹0.00</span></div>
+        <div class="double-divider"></div>
+        <div class="flex" style="font-weight:800; font-size:14px;">
+          <span>GRAND TOTAL:</span>
+          <span id="slipGrandTotal">₹0.00</span>
+        </div>
+        <div class="double-divider"></div>
+
+        <div class="center" style="margin-top:10px; font-size:10px;">
+          THANK YOU FOR SHOPPING WITH US!<br>
+          Exchange within 7 days with bill copy.<br>
+          *** HAVE A GREAT DAY ***
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:16px; justify-content:flex-end;">
+        <button onclick="closeModals()" style="padding:10px 16px; background:transparent; border:1px solid var(--border-subtle); color:#fff; border-radius:6px; cursor:pointer;">Close</button>
+        <button onclick="window.print()" style="padding:10px 20px; background:var(--color-primary); border:none; color:#fff; font-weight:700; border-radius:6px; cursor:pointer;">Print ESC/POS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Z-REPORT AUDIT MODAL -->
+  <div class="modal-overlay" id="zReportModal">
+    <div class="modal-box" style="width:480px;">
+      <h3 style="margin-bottom:12px; font-size:18px;">Day-End Cashier Z-Report Audit</h3>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Date: Today | Shift: General (09:00 - 21:00) | Register: REG-01</div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+        <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid var(--border-subtle);">
+          <div style="font-size:11px; color:var(--text-muted);">TOTAL INVOICES</div>
+          <div style="font-family:var(--font-mono); font-size:20px; font-weight:700; color:#fff;">142 Bills</div>
+        </div>
+        <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid var(--border-subtle);">
+          <div style="font-size:11px; color:var(--text-muted);">GROSS SALES</div>
+          <div style="font-family:var(--font-mono); font-size:20px; font-weight:700; color:var(--color-emerald);">₹48,920.00</div>
+        </div>
+        <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid var(--border-subtle);">
+          <div style="font-size:11px; color:var(--text-muted);">CASH COLLECTED</div>
+          <div style="font-family:var(--font-mono); font-size:16px; font-weight:700; color:#fff;">₹21,400.00</div>
+        </div>
+        <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid var(--border-subtle);">
+          <div style="font-size:11px; color:var(--text-muted);">UPI PAYMENTS</div>
+          <div style="font-family:var(--font-mono); font-size:16px; font-weight:700; color:var(--color-sky);">₹24,520.00</div>
+        </div>
+        <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid var(--border-subtle);">
+          <div style="font-size:11px; color:var(--text-muted);">KHATA CREDIT SALES</div>
+          <div style="font-family:var(--font-mono); font-size:16px; font-weight:700; color:var(--color-amber);">₹3,000.00</div>
+        </div>
+        <div style="background:#0f172a; padding:12px; border-radius:8px; border:1px solid var(--border-subtle);">
+          <div style="font-size:11px; color:var(--text-muted);">TOTAL GST COLLECTED</div>
+          <div style="font-family:var(--font-mono); font-size:16px; font-weight:700; color:#a855f7;">₹3,412.50</div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button onclick="closeModals()" style="padding:10px 16px; background:transparent; border:1px solid var(--border-subtle); color:#fff; border-radius:6px; cursor:pointer;">Close</button>
+        <button onclick="alert('Z-Report #Z-2026-1101 printed and drawer opened!')" style="padding:10px 20px; background:var(--color-primary); border:none; color:#fff; font-weight:700; border-radius:6px; cursor:pointer;">Print Z-Report & Close Shift</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // PRODUCT CATALOG WITH REAL HSN AND GST
+    const PRODUCTS = [
+      { id: 1, sku: 'GRO-001', name: 'Aashirvaad Shudh Chakki Atta 5kg', cat: 'grocery', price: 245.00, hsn: '1101', gst: 5, stock: 42, barcode: '8901030382910' },
+      { id: 2, sku: 'GRO-002', name: 'Daawat Rozana Basmati Rice 5kg', cat: 'grocery', price: 399.00, hsn: '1006', gst: 5, stock: 28, barcode: '8901537001021' },
+      { id: 3, sku: 'GRO-003', name: 'Tata Salt Vaccum Evaporated 1kg', cat: 'grocery', price: 28.00, hsn: '2501', gst: 0, stock: 150, barcode: '8901030383016' },
+      { id: 4, sku: 'GRO-004', name: 'Fortune Sunlite Refined Oil 1L', cat: 'grocery', price: 135.00, hsn: '1512', gst: 5, stock: 64, barcode: '8906007281001' },
+      { id: 5, sku: 'GRO-005', name: 'Madhur Pure & Hygienic Sugar 1kg', cat: 'grocery', price: 48.00, hsn: '1701', gst: 5, stock: 85, barcode: '8906014410012' },
+      { id: 6, sku: 'BEV-001', name: 'Tata Tea Gold Leaf 500g', cat: 'dairy', price: 310.00, hsn: '0902', gst: 5, stock: 35, barcode: '8901030384006' },
+      { id: 7, sku: 'BEV-002', name: 'Amul Taaza Homogenised Toned Milk 1L', cat: 'dairy', price: 74.00, hsn: '0401', gst: 0, stock: 50, barcode: '8901262010013' },
+      { id: 8, sku: 'BEV-003', name: 'Nescafe Classic Instant Coffee 100g Jar', cat: 'dairy', price: 295.00, hsn: '2101', gst: 18, stock: 22, barcode: '8901058852334' },
+      { id: 9, sku: 'SNK-001', name: 'Britannia Good Day Butter Cookies 200g', cat: 'snacks', price: 45.00, hsn: '1905', gst: 18, stock: 110, barcode: '8901063012013' },
+      { id: 10, sku: 'SNK-002', name: 'Haldiram Nagpur Aloo Bhujia 400g', cat: 'snacks', price: 115.00, hsn: '2106', gst: 12, stock: 45, barcode: '8904004400123' },
+      { id: 11, sku: 'PER-001', name: 'Dettol Original Germ Protection Soap 125g', cat: 'personal', price: 58.00, hsn: '3401', gst: 18, stock: 90, barcode: '8901396001017' },
+      { id: 12, sku: 'PER-002', name: 'Colgate Strong Teeth Toothpaste 300g', cat: 'personal', price: 175.00, hsn: '3306', gst: 18, stock: 40, barcode: '8901314010114' }
+    ];
+
+    // IN-MEMORY ACTIVE CART
+    let cart = [
+      { product: PRODUCTS[0], qty: 1 },
+      { product: PRODUCTS[2], qty: 2 },
+      { product: PRODUCTS[5], qty: 1 }
+    ];
+
+    // RENDER PRODUCTS GRID
+    function renderProducts(catFilter = 'all') {
+      const container = document.getElementById('productsGrid');
+      const filtered = catFilter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === catFilter);
+      
+      container.innerHTML = filtered.map(p => `
+        <div class="prod-card" onclick="addToCart(${p.id})">
+          <div class="prod-gst">GST ${p.gst}%</div>
+          <div class="prod-sku">${p.sku} | HSN ${p.hsn}</div>
+          <div class="prod-title">${p.name}</div>
+          <div class="prod-meta">
+            <span class="prod-price">₹${p.price.toFixed(2)}</span>
+            <span class="prod-stock">${p.stock} in stock</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCat(cat) {
+      document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      renderProducts(cat);
+    }
+
+    // CART OPERATIONS
+    function addToCart(productId) {
+      const prod = PRODUCTS.find(p => p.id === productId);
+      if (!prod) return;
+      const existing = cart.find(c => c.product.id === productId);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ product: prod, qty: 1 });
+      }
+      renderCart();
+    }
+
+    function updateQty(index, newQty) {
+      const qty = parseInt(newQty);
+      if (isNaN(qty) || qty <= 0) {
+        removeFromCart(index);
+      } else {
+        cart[index].qty = qty;
+        renderCart();
+      }
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      renderCart();
+    }
+
+    // CALCULATE AND RENDER CART
+    function renderCart() {
+      const container = document.getElementById('cartContainer');
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:40px 10px; color:var(--text-dim); font-size:13px;">
+            Cart is empty. Scan barcode or click an item on the left.
+          </div>
+        `;
+        updateSummary(0, 0, 0, 0);
+        return;
+      }
+
+      container.innerHTML = cart.map((item, idx) => {
+        const itemTotal = item.product.price * item.qty;
+        return `
+          <div class="cart-item">
+            <div>
+              <div class="cart-item-name" title="${item.product.name}">${item.product.name}</div>
+              <div class="cart-item-hsn">HSN ${item.product.hsn} (${item.product.gst}% GST)</div>
+            </div>
+            <div>
+              <input type="number" min="1" class="cart-qty-input" value="${item.qty}" onchange="updateQty(${idx}, this.value)">
+            </div>
+            <div class="cart-item-rate">₹${item.product.price.toFixed(2)}</div>
+            <div class="cart-item-total">₹${itemTotal.toFixed(2)}</div>
+            <div>
+              <button class="cart-item-del" onclick="removeFromCart(${idx})" title="Remove item">&times;</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // TOTALS CALCULATION
+      let totalGross = 0;
+      let totalPcs = 0;
+      let totalTaxable = 0;
+      let totalGst = 0;
+
+      cart.forEach(item => {
+        const lineTotal = item.product.price * item.qty;
+        totalGross += lineTotal;
+        totalPcs += item.qty;
+        
+        // HSN GST Back-calculation
+        const taxRate = item.product.gst / 100;
+        const basePrice = lineTotal / (1 + taxRate);
+        const taxAmount = lineTotal - basePrice;
+        totalTaxable += basePrice;
+        totalGst += taxAmount;
+      });
+
+      const roundedTotal = Math.round(totalGross);
+      const roundOff = roundedTotal - totalGross;
+
+      updateSummary(cart.length, totalPcs, totalTaxable, totalGst, roundOff, roundedTotal);
+    }
+
+    function updateSummary(itemCount, totalPcs, taxable, gst, roundOff, grand) {
+      document.getElementById('sumQty').innerText = `${itemCount} items (${totalPcs} pcs)`;
+      document.getElementById('sumTaxable').innerText = `₹${taxable.toFixed(2)}`;
+      document.getElementById('sumGst').innerText = `₹${gst.toFixed(2)}`;
+      document.getElementById('sumRound').innerText = `${roundOff >= 0 ? '+' : ''}₹${roundOff.toFixed(2)}`;
+      document.getElementById('grandTotal').innerText = `₹${grand.toFixed(2)}`;
+      window._currentGrandTotal = grand;
+    }
+
+    // MODAL HANDLERS
+    function closeModals() {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    }
+
+    function openCashModal() {
+      if (cart.length === 0) return alert('Cart is empty!');
+      document.getElementById('cashModalTotal').innerText = `₹${window._currentGrandTotal.toFixed(2)}`;
+      document.getElementById('cashReceivedInput').value = window._currentGrandTotal;
+      calcChangeDue();
+      document.getElementById('cashModal').classList.add('active');
+      setTimeout(() => document.getElementById('cashReceivedInput').select(), 100);
+    }
+
+    function calcChangeDue() {
+      const received = parseFloat(document.getElementById('cashReceivedInput').value) || 0;
+      const total = window._currentGrandTotal || 0;
+      const change = received - total;
+      const el = document.getElementById('changeDueDisplay');
+      if (change >= 0) {
+        el.innerText = `₹${change.toFixed(2)}`;
+        el.style.color = 'var(--color-emerald)';
+      } else {
+        el.innerText = `-₹${Math.abs(change).toFixed(2)} (Short)`;
+        el.style.color = 'var(--color-rose)';
+      }
+    }
+
+    function completeCashSale() {
+      alert(`Sale completed in Cash! ₹${window._currentGrandTotal} registered. Cash drawer opened.`);
+      closeModals();
+      clearCart();
+    }
+
+    function openUpiModal() {
+      if (cart.length === 0) return alert('Cart is empty!');
+      document.getElementById('upiAmountDisplay').innerText = `₹${window._currentGrandTotal.toFixed(2)}`;
+      document.getElementById('upiModal').classList.add('active');
+    }
+
+    function simulateUpiSuccess() {
+      alert(`UPI Webhook Confirmed! Reference: UPI/2026/894231. Sale completed.`);
+      closeModals();
+      clearCart();
+    }
+
+    function tenderKhata() {
+      if (cart.length === 0) return alert('Cart is empty!');
+      const sel = document.getElementById('custSelect');
+      if (sel.value === 'walkin') {
+        alert('Please select an account holder customer from the dropdown above to tender via Khata Credit.');
+        sel.focus();
+        return;
+      }
+      const opt = sel.options[sel.selectedIndex];
+      const curKhata = parseFloat(opt.getAttribute('data-khata'));
+      const limit = parseFloat(opt.getAttribute('data-limit'));
+      const newKhata = curKhata + window._currentGrandTotal;
+      
+      if (newKhata > limit) {
+        alert(`Credit limit exceeded! Customer limit is ₹${limit}. Current balance + this bill = ₹${newKhata}. Please collect partial cash.`);
+        return;
+      }
+
+      alert(`₹${window._currentGrandTotal.toFixed(2)} added to ${opt.text} Khata ledger! WhatsApp statement dispatched.`);
+      clearCart();
+    }
+
+    function openPrintModal() {
+      if (cart.length === 0) return alert('Cart is empty!');
+      const dateStr = new Date().toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' });
+      document.getElementById('slipDate').innerText = dateStr;
+      
+      const sel = document.getElementById('custSelect');
+      document.getElementById('slipCust').innerText = `Cust: ${sel.options[sel.selectedIndex].text.split('(')[0]}`;
+
+      // Populate thermal slip items
+      let sub = 0;
+      let totalGst = 0;
+      const html = cart.map(item => {
+        const lineTotal = item.product.price * item.qty;
+        sub += lineTotal / (1 + (item.product.gst / 100));
+        totalGst += lineTotal - (lineTotal / (1 + (item.product.gst / 100)));
+        return `
+          <div class="flex">
+            <span style="flex:2;">${item.product.name.substring(0, 16)}</span>
+            <span style="flex:1; text-align:center;">${item.qty}</span>
+            <span style="flex:1; text-align:right;">${item.product.price}</span>
+            <span style="flex:1; text-align:right;">${lineTotal.toFixed(2)}</span>
+          </div>
+        `;
+      }).join('');
+      
+      document.getElementById('slipItems').innerHTML = html;
+      document.getElementById('slipSubtotal').innerText = `₹${sub.toFixed(2)}`;
+      document.getElementById('slipCgst').innerText = `₹${(totalGst / 2).toFixed(2)}`;
+      document.getElementById('slipSgst').innerText = `₹${(totalGst / 2).toFixed(2)}`;
+      document.getElementById('slipRound').innerText = document.getElementById('sumRound').innerText;
+      document.getElementById('slipGrandTotal').innerText = `₹${window._currentGrandTotal.toFixed(2)}`;
+
+      document.getElementById('printModal').classList.add('active');
+    }
+
+    function openZReportModal() {
+      document.getElementById('zReportModal').classList.add('active');
+    }
+
+    function handleCustomerChange() {
+      const sel = document.getElementById('custSelect');
+      const badge = document.getElementById('khataIndicator');
+      if (sel.value === 'walkin') {
+        badge.style.display = 'none';
+      } else {
+        const opt = sel.options[sel.selectedIndex];
+        badge.style.display = 'flex';
+        document.getElementById('khataBal').innerText = `₹${opt.getAttribute('data-khata')}`;
+      }
+    }
+
+    // BARCODE WEDGE SCANNER & KEYBOARD SHORTCUTS
+    document.addEventListener('keydown', (e) => {
+      // F2: Focus barcode input
+      if (e.key === 'F2') {
+        e.preventDefault();
+        document.getElementById('barcodeInput').focus();
+        document.getElementById('barcodeInput').select();
+      }
+      // F4: Cash Tender
+      else if (e.key === 'F4') {
+        e.preventDefault();
+        openCashModal();
+      }
+      // F8: UPI Tender
+      else if (e.key === 'F8') {
+        e.preventDefault();
+        openUpiModal();
+      }
+      // F9: Print 80mm
+      else if (e.key === 'F9') {
+        e.preventDefault();
+        openPrintModal();
+      }
+      // Escape: Close modals
+      else if (e.key === 'Escape') {
+        closeModals();
+      }
+    });
+
+    // BARCODE ENTER / WEDGE LISTENER
+    document.getElementById('barcodeInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = e.target.value.trim().toLowerCase();
+        if (!val) return;
+        
+        // Match barcode, SKU, or name
+        const match = PRODUCTS.find(p => 
+          p.barcode.toLowerCase() === val || 
+          p.sku.toLowerCase() === val || 
+          p.name.toLowerCase().includes(val)
+        );
+
+        if (match) {
+          addToCart(match.id);
+          e.target.value = '';
+        } else {
+          alert(`Item not found for code: "${val}"`);
+        }
+      }
+    });
+
+    // INIT
+    renderProducts();
+    renderCart();
+  </script>
 </body>
 </html>

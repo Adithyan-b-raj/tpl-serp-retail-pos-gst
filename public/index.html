@@ -3,349 +3,396 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-wl-brand>APEX POS // Retail GST Register</title>
+  <title data-brand="brand_name">Vyapar Retail — Digital GST Invoice & Customer Khata Passbook</title>
+  <meta name="description" content="View your digital GST tax invoice, itemized HSN splits, and credit khata passbook balance online.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="theme-tokens.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="whitelabel.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg-main, #E2E8F0);
-      color: var(--color-dark, #111827);
-      font-family: var(--font-primary, 'Plus Jakarta Sans', sans-serif);
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+    :root {
+      --bg-base: #f4f6f8;
+      --bg-surface: #ffffff;
+      --border-subtle: #e2e8f0;
+      --indigo: #4338ca;
+      --indigo-hover: #3730a3;
+      --emerald: #059669;
+      --amber: #d97706;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --font-mono: 'DM Mono', monospace;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --container-max: 980px;
     }
 
-    /* Fixed 52px Terminal Header */
-    .pos-header {
-      height: 52px;
-      background: #0F172A;
-      color: #FFF;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: var(--container-max);
+      margin: 0 auto;
       padding: 0 20px;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      height: 70px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+    }
+    .topbar-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-family: var(--font-mono, 'JetBrains Mono', monospace);
-      font-size: 12px;
+      width: 100%;
     }
-    .brand-tag { font-weight: 700; font-size: 15px; color: #FFF; display: flex; align-items: center; gap: 8px; }
-    .gstin-pill { background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; color: #38BDF8; }
-
-    /* 3-Column POS Workspace */
-    .pos-workspace {
-      display: grid;
-      grid-template-columns: 200px 1fr 380px;
-      flex: 1;
-      height: calc(100vh - 52px);
-    }
-    @media (max-width: 900px) {
-      .pos-workspace { grid-template-columns: 1fr; overflow-y: auto; height: auto; }
-    }
-
-    /* Left Category Rail */
-    .cat-rail {
-      background: #FFFFFF;
-      border-right: 1px solid var(--border-color, #CBD5E1);
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--indigo);
+      text-decoration: none;
       display: flex;
-      flex-direction: column;
-      padding: 12px;
+      align-items: center;
       gap: 8px;
     }
-    .cat-btn {
-      background: none;
-      border: 1px solid transparent;
-      padding: 12px 14px;
-      border-radius: 8px;
-      text-align: left;
-      font-weight: 600;
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 6px;
       font-size: 13px;
-      color: #475569;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s;
+      text-decoration: none;
+      border: 1px solid var(--border-subtle);
+      background: #fff;
+      color: var(--text-main);
     }
-    .cat-btn:hover { background: #F1F5F9; color: #0F172A; }
-    .cat-btn.active {
-      background: var(--color-primary, #EA580C);
-      color: #FFF;
-      font-weight: 700;
+    .btn-indigo {
+      background: var(--indigo);
+      border-color: var(--indigo);
+      color: #fff;
     }
+    .btn-indigo:hover { background: var(--indigo-hover); }
 
-    /* Center Touch Grid */
-    .item-pane {
-      background: #F8FAFC;
-      padding: 16px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
+    /* LOOKUP HERO */
+    .lookup-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 32px;
+      margin: 40px auto 30px;
+      max-width: 640px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      text-align: center;
     }
-    .search-bar {
-      margin-bottom: 16px;
+    .lookup-input-group {
       display: flex;
       gap: 10px;
+      margin-top: 20px;
     }
-    .search-input {
+    .phone-input {
       flex: 1;
-      padding: 10px 14px;
-      border: 1px solid #CBD5E1;
-      border-radius: 8px;
-      font-size: 14px;
+      padding: 12px 16px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      font-size: 15px;
       font-family: var(--font-mono);
       outline: none;
     }
-    .touch-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 12px;
+    .phone-input:focus { border-color: var(--indigo); }
+
+    /* DIGITAL TAX INVOICE */
+    .invoice-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04);
     }
-    .touch-tile {
-      background: #FFF;
-      border: 1px solid #E2E8F0;
-      border-radius: 8px;
-      padding: 14px;
+    .invoice-header {
       display: flex;
-      flex-direction: column;
       justify-content: space-between;
-      min-height: 110px;
-      cursor: pointer;
-      user-select: none;
-      transition: transform 0.1s, border-color 0.1s, box-shadow 0.1s;
+      border-bottom: 2px dashed var(--border-subtle);
+      padding-bottom: 24px;
+      margin-bottom: 24px;
     }
-    .touch-tile:hover {
-      border-color: var(--color-primary, #EA580C);
-      box-shadow: 0 4px 12px rgba(234, 88, 12, 0.1);
+    .store-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--indigo);
     }
-    .touch-tile:active { transform: scale(0.97); }
-    .tile-name { font-size: 13px; font-weight: 700; color: #1E293B; line-height: 1.3; }
-    .tile-hsn { font-family: var(--font-mono); font-size: 10px; color: #94A3B8; margin-top: 4px; }
-    .tile-price { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--color-primary, #EA580C); margin-top: 8px; }
-
-    /* Right Pinned 80mm Thermal Receipt */
-    .receipt-pane {
-      background: #0F172A;
-      border-left: 1px solid #334155;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-    }
-    .thermal-paper {
-      background: #FFFFF8;
-      color: #000;
-      border-radius: 4px;
-      padding: 18px 14px;
-      font-family: var(--font-mono, 'JetBrains Mono', monospace);
-      font-size: 11px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      position: relative;
-    }
-    .thermal-paper::before, .thermal-paper::after {
-      content: "";
-      position: absolute;
-      left: 0; right: 0;
-      height: 6px;
-      background: radial-gradient(circle, transparent, transparent 50%, #FFFFF8 50%, #FFFFF8 100%);
-      background-size: 12px 12px;
-    }
-    .thermal-paper::before { top: -6px; }
-    .thermal-paper::after { bottom: -6px; }
-
-    .bill-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 8px; margin-bottom: 10px; }
-    .bill-title { font-weight: 700; font-size: 14px; }
-    .bill-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-    .bill-table th { border-bottom: 1px solid #000; padding: 4px 0; text-align: left; }
-    .bill-table td { padding: 4px 0; }
-    .bill-summary { border-top: 1px dashed #000; padding-top: 6px; }
-    .sum-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
-
-    .tender-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .tender-btn {
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      font-weight: 700;
+    .gstin-tag {
       font-family: var(--font-mono);
       font-size: 12px;
-      cursor: pointer;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
-    .btn-cash { background: #10B981; color: #FFF; }
-    .btn-upi { background: var(--color-primary, #EA580C); color: #FFF; }
-    .btn-khata { background: #6366F1; color: #FFF; grid-column: span 2; }
+
+    .bill-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+    .meta-label { color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+    .meta-val { font-weight: 600; font-family: var(--font-mono); }
+
+    /* ITEMS TABLE */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+    .items-table th {
+      background: #f8fafc;
+      padding: 12px 14px;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      text-align: left;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .items-table td {
+      padding: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    /* TAX SUMMARY */
+    .tax-breakdown-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .totals-list {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .grand-total-row {
+      border-top: 2px solid var(--text-main);
+      padding-top: 10px;
+      margin-top: 6px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--indigo);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* KHATA PASSBOOK CARD */
+    .khata-card {
+      background: #fff;
+      border: 1px solid #fed7aa;
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 40px;
+      background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%);
+    }
+    .khata-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .khata-balance {
+      font-family: var(--font-mono);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--amber);
+    }
+
+    .footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 30px 0;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
   </style>
 </head>
-<body data-layout-archetype="tactile-pos-terminal">
-  <!-- POS Status Bar -->
-  <header class="pos-header">
-    <div class="brand-tag">
-      <span style="color:var(--color-primary);">■</span>
-      <span data-wl-brand>APEX RETAIL POS</span>
-    </div>
-    <div style="display:flex; gap:16px; align-items:center;">
-      <span class="gstin-pill">GSTIN: 29AAACA1234F1Z9</span>
-      <span>REG #01</span>
-      <span>CASHIER: RAHUL M.</span>
-      <a href="admin.html" style="color:#F59E0B; text-decoration:none; font-weight:700;">[ ADMIN HUB ]</a>
+<body>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#" class="brand-title" data-brand="brand_name">
+        <span>🛒 Vyapar Retail Portal</span>
+      </a>
+      <div style="display: flex; gap: 10px;">
+        <a href="admin.html" class="btn btn-indigo">Open Cashier Terminal &rarr;</a>
+      </div>
     </div>
   </header>
 
-  <!-- Main POS Workspace -->
-  <div class="pos-workspace">
-    <!-- Left Category Rail -->
-    <div class="cat-rail">
-      <button class="cat-btn active" onclick="filterCat('all')">ALL ITEMS</button>
-      <button class="cat-btn" onclick="filterCat('grocery')">GROCERY</button>
-      <button class="cat-btn" onclick="filterCat('dairy')">DAIRY & COLD</button>
-      <button class="cat-btn" onclick="filterCat('snacks')">BEVERAGES</button>
-    </div>
+  <main class="container">
+    <!-- LOOKUP BOX -->
+    <div class="lookup-card">
+      <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 6px;">Customer Digital Bill & Khata Passbook</h2>
+      <p style="font-size: 13px; color: var(--text-muted);">
+        Enter registered mobile number to retrieve your official GST tax invoice and store credit balance.
+      </p>
 
-    <!-- Center Touch Grid -->
-    <div class="item-pane">
-      <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Type barcode / SKU name (e.g. Rice, Milk, Oil)..." oninput="searchItems(this.value)">
-      </div>
-      <div class="touch-grid" id="itemGrid">
-        <div class="touch-tile" onclick="addItem('Basmati Rice 5kg', 450, 'HSN-1006')">
-          <div class="tile-name">Basmati Rice 5kg</div>
-          <div class="tile-hsn">HSN: 1006 (GST 5%)</div>
-          <div class="tile-price">₹450.00</div>
-        </div>
-        <div class="touch-tile" onclick="addItem('Cold Pressed Coconut Oil 1L', 280, 'HSN-1513')">
-          <div class="tile-name">Cold Pressed Coconut Oil 1L</div>
-          <div class="tile-hsn">HSN: 1513 (GST 5%)</div>
-          <div class="tile-price">₹280.00</div>
-        </div>
-        <div class="touch-tile" onclick="addItem('Farm Fresh Cow Milk 1L', 64, 'HSN-0401')">
-          <div class="tile-name">Farm Fresh Cow Milk 1L</div>
-          <div class="tile-hsn">HSN: 0401 (NIL)</div>
-          <div class="tile-price">₹64.00</div>
-        </div>
-        <div class="touch-tile" onclick="addItem('Roasted Arabica Beans 250g', 320, 'HSN-0901')">
-          <div class="tile-name">Roasted Arabica Beans 250g</div>
-          <div class="tile-hsn">HSN: 0901 (GST 5%)</div>
-          <div class="tile-price">₹320.00</div>
-        </div>
-        <div class="touch-tile" onclick="addItem('Alphonso Mango Pulp 850g', 190, 'HSN-2008')">
-          <div class="tile-name">Alphonso Mango Pulp 850g</div>
-          <div class="tile-hsn">HSN: 2008 (GST 12%)</div>
-          <div class="tile-price">₹190.00</div>
-        </div>
-        <div class="touch-tile" onclick="addItem('Kashmiri Saffron 1g', 390, 'HSN-0910')">
-          <div class="tile-name">Kashmiri Saffron 1g</div>
-          <div class="tile-hsn">HSN: 0910 (GST 5%)</div>
-          <div class="tile-price">₹390.00</div>
-        </div>
+      <div class="lookup-input-group">
+        <input type="tel" class="phone-input" id="searchPhone" placeholder="Enter 10-digit phone (Demo: 9840122990)" value="9840122990">
+        <button class="btn btn-indigo" style="padding: 12px 24px;" onclick="lookupCustomerBill()">Search Invoice</button>
       </div>
     </div>
 
-    <!-- Right 80mm Thermal Receipt -->
-    <div class="receipt-pane">
-      <div class="thermal-paper">
-        <div class="bill-header">
-          <div class="bill-title" data-wl-brand>APEX SUPERMARKET</div>
-          <div>BOM-01 CENTRAL BRANCH</div>
-          <div>TAX INVOICE: #INV-88421</div>
-          <div id="billDate"></div>
+    <!-- KHATA PASSBOOK SUMMARY -->
+    <div class="khata-card" id="khataBox">
+      <div class="khata-header">
+        <div>
+          <div style="font-size: 12px; color: var(--amber); font-weight: 700; text-transform: uppercase;">Customer Khata (Store Credit) Ledger</div>
+          <div style="font-size: 16px; font-weight: 700;" id="khataCustomerName">Rajesh Sharma (Sharma Traders)</div>
         </div>
+        <div style="text-align: right;">
+          <div style="font-size: 11px; color: var(--text-muted);">Outstanding Khata Balance</div>
+          <div class="khata-balance" id="khataBalance">₹8,420.00</div>
+        </div>
+      </div>
+      <div style="font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between;">
+        <span>Approved Credit Limit: ₹50,000</span>
+        <span style="color: var(--emerald); font-weight: 600;">Payment Standing: Excellent (Net-30)</span>
+      </div>
+    </div>
 
-        <table class="bill-table">
-          <thead>
-            <tr><th>ITEM</th><th>QTY</th><th style="text-align:right;">AMT</th></tr>
-          </thead>
-          <tbody id="billItems">
-            <tr><td colspan="3" style="text-align:center; color:#999; padding:12px 0;">-- TAP ITEMS TO PUNCH --</td></tr>
-          </tbody>
-        </table>
+    <!-- DIGITAL GST INVOICE -->
+    <div class="invoice-card" id="invoiceCard">
+      <div class="invoice-header">
+        <div>
+          <div class="store-name" data-brand="brand_name">Vyapar Supermarket & Provisions</div>
+          <div class="gstin-tag">GSTIN: 29AABCS1429Q1Z4 // HSN REGISTERED</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Shop 4-5, Brigade Road, Bengaluru - 560025</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-weight: 800; font-size: 16px;">TAX INVOICE</div>
+          <div class="meta-val" id="invBillNum" style="color: var(--indigo);">BILL-2026-0842</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;" id="invDate">31-Oct-2026 18:22 IST</div>
+        </div>
+      </div>
 
-        <div class="bill-summary">
-          <div class="sum-row"><span>SUBTOTAL:</span><span id="subTotal">₹0.00</span></div>
-          <div class="sum-row"><span>CGST 2.5%:</span><span id="cgst">₹0.00</span></div>
-          <div class="sum-row"><span>SGST 2.5%:</span><span id="sgst">₹0.00</span></div>
-          <div class="sum-row" style="font-weight:700; font-size:14px; margin-top:6px; border-top:1px solid #000; padding-top:4px;">
-            <span>TOTAL PAYABLE:</span>
-            <span id="grandTotal">₹0.00</span>
+      <div class="bill-meta-grid">
+        <div>
+          <div class="meta-label">Customer Mobile</div>
+          <div class="meta-val" id="invCustomerPhone">+91 98401 22990</div>
+        </div>
+        <div>
+          <div class="meta-label">Payment Tendered</div>
+          <div class="meta-val" id="invPaymentMode" style="color: var(--emerald);">UPI (Dynamic QR)</div>
+        </div>
+        <div>
+          <div class="meta-label">Cashier Pos Terminal</div>
+          <div class="meta-val">Counter 01 / Cashier: Arjun</div>
+        </div>
+      </div>
+
+      <!-- ITEM TABLE -->
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Item Description</th>
+            <th>HSN</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Taxable Val</th>
+            <th>CGST (9%)</th>
+            <th>SGST (9%)</th>
+            <th style="text-align: right;">Total</th>
+          </tr>
+        </thead>
+        <tbody id="invoiceItems">
+          <tr>
+            <td>Organic Cold-Pressed Coconut Oil 1L</td>
+            <td>1513</td>
+            <td>2 bottle</td>
+            <td>₹399.00</td>
+            <td>₹760.00</td>
+            <td>₹19.00 (2.5%)</td>
+            <td>₹19.00 (2.5%)</td>
+            <td style="text-align: right; font-weight: 600;">₹798.00</td>
+          </tr>
+          <tr>
+            <td>Brass Filter Coffee Degchi Set</td>
+            <td>7418</td>
+            <td>1 set</td>
+            <td>₹1,490.00</td>
+            <td>₹1,262.71</td>
+            <td>₹113.64 (9%)</td>
+            <td>₹113.64 (9%)</td>
+            <td style="text-align: right; font-weight: 600;">₹1,490.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- TOTALS -->
+      <div class="tax-breakdown-box">
+        <div class="totals-list">
+          <div class="total-row">
+            <span>Taxable Subtotal:</span>
+            <span id="subtotalVal">₹2,022.71</span>
+          </div>
+          <div class="total-row">
+            <span>Central GST (CGST):</span>
+            <span id="cgstVal">₹132.64</span>
+          </div>
+          <div class="total-row">
+            <span>State GST (SGST):</span>
+            <span id="sgstVal">₹132.64</span>
+          </div>
+          <div class="total-row" style="color: var(--emerald);">
+            <span>Festive Discount:</span>
+            <span>- ₹100.00</span>
+          </div>
+          <div class="grand-total-row">
+            <span>Invoice Total:</span>
+            <span id="grandTotalVal">₹2,188.00</span>
           </div>
         </div>
-
-        <div style="text-align:center; margin-top:10px; border-top:1px dashed #000; padding-top:8px;">
-          <div>[ SCAN UPI QR TO PAY ]</div>
-          <div style="background:#000; color:#FFF; padding:6px; margin:6px auto; width:100px; font-size:9px;">
-            UPI://PAY?PA=apex@okhdfc
-          </div>
-          <div style="font-size:10px;">THANK YOU · VISIT AGAIN!</div>
-        </div>
-      </div>
-
-      <div class="tender-actions">
-        <button class="tender-btn btn-cash" onclick="payTender('CASH')">[F1] CASH TENDER</button>
-        <button class="tender-btn btn-upi" onclick="payTender('UPI')">[F2] UPI QR TENDER</button>
-        <button class="tender-btn btn-khata" onclick="payTender('KHATA')">[F3] KHATA CREDIT LEDGER</button>
       </div>
     </div>
-  </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      &copy; 2026 <span data-brand="brand_name">Vyapar Retail Systems</span>. Valid Tax Invoice under Rule 46 of CGST Rules 2017.
+    </div>
+  </footer>
 
   <script>
-    document.getElementById('billDate').textContent = new Date().toLocaleString();
-    let cart = [];
+    async function lookupCustomerBill() {
+      const phone = document.getElementById('searchPhone').value.trim();
+      if (!phone) return;
 
-    function addItem(name, price, hsn) {
-      const exist = cart.find(i => i.name === name);
-      if (exist) { exist.qty++; } else { cart.push({ name, price, hsn, qty: 1 }); }
-      renderReceipt();
-    }
-
-    function renderReceipt() {
-      const tbody = document.getElementById('billItems');
-      if (cart.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#999; padding:12px 0;">-- TAP ITEMS TO PUNCH --</td></tr>';
-        document.getElementById('subTotal').textContent = '₹0.00';
-        document.getElementById('cgst').textContent = '₹0.00';
-        document.getElementById('sgst').textContent = '₹0.00';
-        document.getElementById('grandTotal').textContent = '₹0.00';
-        return;
-      }
-      let sub = 0;
-      tbody.innerHTML = cart.map(item => {
-        const itemTotal = item.price * item.qty;
-        sub += itemTotal;
-        return `<tr><td>${item.name}</td><td>${item.qty}</td><td style="text-align:right;">₹${itemTotal}</td></tr>`;
-      }).join('');
-
-      const tax = sub * 0.025;
-      const total = sub + (tax * 2);
-      document.getElementById('subTotal').textContent = '₹' + sub.toFixed(2);
-      document.getElementById('cgst').textContent = '₹' + tax.toFixed(2);
-      document.getElementById('sgst').textContent = '₹' + tax.toFixed(2);
-      document.getElementById('grandTotal').textContent = '₹' + total.toFixed(2);
-    }
-
-    function payTender(mode) {
-      if (cart.length === 0) { alert('Cart is empty. Tap products to punch bill.'); return; }
-      const tot = document.getElementById('grandTotal').textContent;
-      alert('Tender settled via ' + mode + ' for ' + tot + '! Receipt printing to 80mm thermal cutter...');
-      cart = [];
-      renderReceipt();
-    }
-
-    function searchItems(val) {
-      const tiles = document.querySelectorAll('.touch-tile');
-      tiles.forEach(t => {
-        const txt = t.textContent.toLowerCase();
-        t.style.display = txt.includes(val.toLowerCase()) ? 'flex' : 'none';
-      });
-    }
-
-    function filterCat(cat) {
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      try {
+        const res = await fetch(`/api/khata?phone=${phone}`);
+        const data = await res.json();
+        if (data.ok && data.customer) {
+          document.getElementById('khataCustomerName').textContent = data.customer.customer_name;
+          document.getElementById('khataBalance').textContent = `₹${data.customer.current_balance_inr.toFixed(2)}`;
+          document.getElementById('invCustomerPhone').textContent = `+91 ${phone}`;
+        }
+      } catch (err) {}
     }
   </script>
 </body>
