@@ -2,133 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>METRO SUPERMART POS — Admin & POS Command Center</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <title data-wl-brand>APEX POS // Day-End Z-Report & Khata Ledger</title>
   <link rel="stylesheet" href="theme-tokens.css">
   <script src="whitelabel.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-primary); background: #F4F5F7; color: #0F172A; display: flex; min-height: 100vh; }
-    aside.admin-sidebar {
-      width: 250px;
-      background: var(--brand-dark);
-      color: #FFF;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-    .sidebar-brand-title { font-family: var(--font-accent); font-size: 19px; font-weight: 700; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.12); }
-    .sidebar-brand-title span { color: var(--brand-primary); }
-    .nav-item { padding: 10px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: #CBD5E1; }
-    .nav-item.active, .nav-item:hover { background: var(--brand-primary); color: #FFF; }
-    main { flex: 1; padding: 26px; overflow-y: auto; }
-    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px; }
-    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
-    .kpi-card { background: #FFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 16px; }
-    .kpi-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748B; }
-    .kpi-val { font-size: 22px; font-weight: 700; margin: 6px 0 4px; }
-    .kpi-delta { font-size: 11px; font-weight: 600; color: var(--brand-primary); }
-    .card-box { background: #FFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 18px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { text-align: left; padding: 11px 10px; border-bottom: 1px solid #E2E8F0; }
-    th { font-size: 11px; text-transform: uppercase; color: #64748B; }
-    .status-pill { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: #FEF3EE; color: var(--brand-primary); }
-    .btn-sm { background: var(--brand-primary); color: #FFF; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; text-decoration: none; }
-    @media (max-width: 860px) { body { flex-direction: column; } aside.admin-sidebar { width: 100%; } .kpi-grid { grid-template-columns: 1fr 1fr; } }
+    body { background: #0F172A; color: #FFF; font-family: monospace; padding: 24px; }
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 20px 0; }
+    .kpi-c { background: #1E293B; border: 1px solid #334155; padding: 16px; border-radius: 8px; }
   </style>
 </head>
-<body>
-  <aside class="admin-sidebar">
-    <div class="sidebar-brand-title">METRO SUPERMART POS <span>Hub</span></div>
-    <div class="nav-item active">⚡ Live POS / Operations</div>
-    <div class="nav-item" onclick="window.location.href='index.html'">👁️ Customer Portal</div>
-    <div style="margin-top:auto;padding-top:14px;border-top:1px solid rgba(255,255,255,0.12);font-size:11px;color:#94A3B8;">
-      Support / Alert WhatsApp:
-      <input type="text" id="adminWaInput" data-wl-wa value="919061902295" style="width:100%;margin-top:6px;padding:6px;border-radius:4px;border:none;">
-    </div>
-  </aside>
-  <main>
-    <div class="top-bar">
-      <div>
-        <div class="mobile-brand" style="font-size:12px;font-weight:700;color:var(--brand-primary);text-transform:uppercase;">METRO SUPERMART POS</div>
-        <h1 style="font-size:21px;">Cashier Barcode POS Register, 80mm Thermal Receipt & Udhaar Khata Ledger</h1>
-      </div>
-      <a href="index.html" class="btn-sm">← Customer View</a>
-    </div>
-    <div class="kpi-grid">
-      <div class="kpi-card"><div class="kpi-label">Today Counter POS Sales</div><div class="kpi-val">₹68,420</div><div class="kpi-delta">142 Thermal Bills</div></div><div class="kpi-card"><div class="kpi-label">UPI vs Cash Split</div><div class="kpi-val">78% UPI / 22% Cash</div><div class="kpi-delta">Cashfree QR Instant</div></div><div class="kpi-card"><div class="kpi-label">Active Customer Khata</div><div class="kpi-val">₹24,150 Due</div><div class="kpi-delta">18 Regular Accounts</div></div><div class="kpi-card"><div class="kpi-label">GSTR-1 Ready Invoices</div><div class="kpi-val">100% Synced</div><div class="kpi-delta">HSN Summary Verified</div></div>
-    </div>
-    <div class="card-box">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-        <h2 style="font-size:16px;">Live Operations Queue, Counter POS & Ledger</h2>
-        <button class="btn-sm" onclick="newPosEntry()">+ New Counter / POS Entry</button>
-      </div>
-      <div style="overflow-x:auto;">
-        <table>
-          <thead><tr><th>ID</th><th>Party / Account</th><th>Line Items & Particulars</th><th>Amount</th><th>Status</th><th>WhatsApp</th></tr></thead>
-          <tbody id="leadsTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </main>
-  <script>
-    const SEED = [
-  {
-    "id": "INV-8821",
-    "name": "Joseph Mathew (Khata Acct #14)",
-    "phone": "919847011223",
-    "detail": "8 Items • Taxable: ₹2,187 + CGST ₹131 + SGST ₹131 • Paid via UPI",
-    "status": "PAID // 80MM PRINTED",
-    "amount": "₹2,450"
-  },
-  {
-    "id": "INV-8820",
-    "name": "Hotel SeaQueen Kitchen Purchase",
-    "phone": "919447022334",
-    "detail": "Bulk Rice & Oil • B2B GSTIN 32AABCH9988F1Z2 • Credit 7 Days",
-    "status": "KHATA CREDIT DUE",
-    "amount": "₹14,800"
-  },
-  {
-    "id": "INV-8819",
-    "name": "Lakshmi Nair (Walk-in Counter 1)",
-    "phone": "919895033445",
-    "detail": "4 Items • Cash Tender ₹1,500 (Change ₹180)",
-    "status": "PAID // CASH",
-    "amount": "₹1,320"
-  }
-];
-    function render() {
-      let local = [];
-      try { local = JSON.parse(localStorage.getItem('bmad_leads_tpl-serp-retail-pos-gst') || '[]'); } catch (e) {}
-      const rows = [...local, ...SEED];
-      document.getElementById('leadsTableBody').innerHTML = rows.map(row => `
-        <tr>
-          <td><strong>${row.id}</strong></td>
-          <td>${row.name}<br><span style="font-size:11px;color:#64748B;">+${row.phone}</span></td>
-          <td>${row.detail}</td>
-          <td><strong>${row.amount}</strong></td>
-          <td><span class="status-pill">${row.status}</span></td>
-          <td><a class="btn-sm" target="_blank" href="https://wa.me/${String(row.phone).replace(/[^0-9]/g,'')}?text=${encodeURIComponent('Update from ' + document.title + ': ' + row.id + ' — ' + row.detail)}">💬 Alert</a></td>
-        </tr>
-      `).join('');
-    }
-    function newPosEntry() {
-      const name = prompt('Customer / Vendor / Employee Name:');
-      if (!name) return;
-      const detail = prompt('Items / Notes:', 'Organic Wayanad Matta Rice (10kg Bag)');
-      const amount = prompt('Amount (₹):', '₹1,450');
-      const local = JSON.parse(localStorage.getItem('bmad_leads_tpl-serp-retail-pos-gst') || '[]');
-      local.unshift({ id: 'POS-' + Math.floor(1000 + Math.random()*9000), name, phone: document.getElementById('adminWaInput').value || '919061902295', detail, amount, status: 'CONFIRMED' });
-      localStorage.setItem('bmad_leads_tpl-serp-retail-pos-gst', JSON.stringify(local));
-      render();
-    }
-    render();
-  </script>
+<body data-layout-archetype="tactile-pos-admin">
+  <h2><span data-wl-brand>APEX POS</span> — Day-End Cashier Z-Report & Khata Audit</h2>
+  <div class="kpi-row">
+    <div class="kpi-c"><div>DAILY GROSS SALES</div><div style="font-size:24px; font-weight:700;">₹48,920.00</div></div>
+    <div class="kpi-c"><div>CASH IN REGISTER</div><div style="font-size:24px; font-weight:700; color:#10B981;">₹21,400.00</div></div>
+    <div class="kpi-c"><div>UPI SETTLEMENTS</div><div style="font-size:24px; font-weight:700; color:#38BDF8;">₹24,520.00</div></div>
+    <div class="kpi-c"><div>KHATA UNPAID BALANCE</div><div style="font-size:24px; font-weight:700; color:#F59E0B;">₹3,000.00</div></div>
+  </div>
+  <a href="index.html" style="color:var(--color-primary);">&larr; Return to Touch Cashier Register</a>
 </body>
 </html>

@@ -3,470 +3,350 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>METRO SUPERMART POS — Small ERP</title>
+  <title data-wl-brand>APEX POS // Retail GST Register</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="theme-tokens.css">
   <script src="whitelabel.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: var(--font-primary);
-      background-color: var(--bg-main);
-      color: var(--color-dark);
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-    }
-    .top-bar {
-      background: var(--bg-canvas);
-      color: var(--color-dark);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      text-align: center;
-      padding: 8px 16px;
-      border-bottom: 1px solid var(--border-color);
-    }
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-color);
-    }
-    .nav-container {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 15px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-    .brand-logo {
-      font-family: var(--font-accent);
-      font-size: 23px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      color: var(--color-dark);
-      text-decoration: none;
-    }
-    .brand-logo span {
-      font-family: var(--font-primary);
-      color: var(--color-primary);
-      font-size: 11px;
-      letter-spacing: 2px;
-      display: block;
-      margin-top: -2px;
-    }
-    nav.desktop-nav { display: flex; gap: 22px; align-items: center; }
-    nav.desktop-nav a {
-      color: var(--color-dark);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    nav.desktop-nav a:hover { color: var(--color-primary); }
-    .btn-primary {
-      background: var(--color-primary);
-      color: #FFFFFF;
-      border: none;
-      padding: 11px 20px;
-      border-radius: var(--radius);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-outline {
-      background: transparent;
-      color: var(--color-dark);
-      border: 1px solid var(--border-color);
-      padding: 11px 20px;
-      border-radius: var(--radius);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .hero-banner {
-      padding: 64px 24px 52px;
-      max-width: 1240px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .hero-pill {
-      display: inline-block;
-      background: var(--bg-canvas);
-      border: 1px solid var(--border-color);
-      color: var(--color-primary);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      padding: 6px 14px;
-      border-radius: 999px;
-      margin-bottom: 18px;
-    }
-    .hero-banner h1 {
-      font-family: var(--font-accent);
-      font-size: clamp(32px, 4.6vw, 56px);
-      line-height: 1.1;
-      margin-bottom: 16px;
-    }
-    .hero-banner p {
-      font-size: 16px;
-      color: #64748B;
-      max-width: 680px;
-      margin: 0 auto 26px;
-    }
-    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .section-wrap { max-width: 1240px; margin: 0 auto; padding: 42px 24px; }
-    .section-head {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .bento-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--grid-gap-desktop);
-    }
-    .bento-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
+      background: var(--bg-main, #E2E8F0);
+      color: var(--color-dark, #111827);
+      font-family: var(--font-primary, 'Plus Jakarta Sans', sans-serif);
+      height: 100vh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s;
     }
-    .bento-card:hover { transform: translateY(-4px); border-color: var(--color-primary); }
-    .bento-img-wrap { height: 210px; position: relative; background: var(--bg-canvas); overflow: hidden; }
-    .bento-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .bento-badge {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background: var(--color-primary);
+
+    /* Fixed 52px Terminal Header */
+    .pos-header {
+      height: 52px;
+      background: #0F172A;
       color: #FFF;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 4px;
-    }
-    .bento-body { padding: 18px; display: flex; flex-direction: column; flex: 1; }
-    .bento-code { font-size: 11px; color: #64748B; font-weight: 600; margin-bottom: 4px; }
-    .bento-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-    .bento-sub { font-size: 13px; color: #64748B; margin-bottom: 14px; flex: 1; }
-    .bento-footer {
+      padding: 0 20px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      padding-top: 12px;
-      border-top: 1px solid var(--border-color);
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--color-primary);
-    }
-    .calc-panel {
-      background: var(--bg-canvas);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 32px;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 28px;
-      align-items: center;
-    }
-    .slider-group { margin-bottom: 18px; }
-    .slider-group label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-    .slider-group input[type="range"] { width: 100%; accent-color: var(--color-primary); }
-    .calc-result-card {
-      background: #FFFFFF;
-      border: 2px solid var(--color-primary);
-      border-radius: var(--radius);
-      padding: 24px;
-      text-align: center;
-    }
-    .calc-result-val {
-      font-family: var(--font-accent);
-      font-size: 38px;
-      font-weight: 700;
-      color: var(--color-primary);
-      margin: 8px 0 14px;
-    }
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.65);
-      z-index: 900;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-box {
-      background: #FFFFFF;
-      color: var(--color-dark);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      max-width: 480px;
-      width: 100%;
-      padding: 24px;
-    }
-    .form-field { margin-bottom: 12px; }
-    .form-field label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: #64748B; }
-    .form-field input {
-      width: 100%;
-      padding: 10px;
-      background: var(--bg-main);
-      color: var(--color-dark);
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-    }
-    .wa-float-btn {
-      position: fixed;
-      bottom: 24px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
-      background: #25D366;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 500;
-      text-decoration: none;
-      color: #FFF;
-      font-size: 22px;
-    }
-    .admin-pill-floating {
-      position: fixed;
-      bottom: 24px;
-      left: 24px;
-      background: var(--color-dark);
-      color: #FFF;
-      padding: 10px 16px;
-      border-radius: 999px;
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
       font-size: 12px;
+    }
+    .brand-tag { font-weight: 700; font-size: 15px; color: #FFF; display: flex; align-items: center; gap: 8px; }
+    .gstin-pill { background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; color: #38BDF8; }
+
+    /* 3-Column POS Workspace */
+    .pos-workspace {
+      display: grid;
+      grid-template-columns: 200px 1fr 380px;
+      flex: 1;
+      height: calc(100vh - 52px);
+    }
+    @media (max-width: 900px) {
+      .pos-workspace { grid-template-columns: 1fr; overflow-y: auto; height: auto; }
+    }
+
+    /* Left Category Rail */
+    .cat-rail {
+      background: #FFFFFF;
+      border-right: 1px solid var(--border-color, #CBD5E1);
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      gap: 8px;
+    }
+    .cat-btn {
+      background: none;
+      border: 1px solid transparent;
+      padding: 12px 14px;
+      border-radius: 8px;
+      text-align: left;
       font-weight: 600;
-      text-decoration: none;
-      z-index: 500;
+      font-size: 13px;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s;
     }
-    @media (max-width: 860px) {
-      .bento-grid, .calc-panel { grid-template-columns: 1fr; }
-      nav.desktop-nav, .admin-pill-floating { display: none; }
+    .cat-btn:hover { background: #F1F5F9; color: #0F172A; }
+    .cat-btn.active {
+      background: var(--color-primary, #EA580C);
+      color: #FFF;
+      font-weight: 700;
     }
+
+    /* Center Touch Grid */
+    .item-pane {
+      background: #F8FAFC;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .search-bar {
+      margin-bottom: 16px;
+      display: flex;
+      gap: 10px;
+    }
+    .search-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: var(--font-mono);
+      outline: none;
+    }
+    .touch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .touch-tile {
+      background: #FFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 110px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s, border-color 0.1s, box-shadow 0.1s;
+    }
+    .touch-tile:hover {
+      border-color: var(--color-primary, #EA580C);
+      box-shadow: 0 4px 12px rgba(234, 88, 12, 0.1);
+    }
+    .touch-tile:active { transform: scale(0.97); }
+    .tile-name { font-size: 13px; font-weight: 700; color: #1E293B; line-height: 1.3; }
+    .tile-hsn { font-family: var(--font-mono); font-size: 10px; color: #94A3B8; margin-top: 4px; }
+    .tile-price { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--color-primary, #EA580C); margin-top: 8px; }
+
+    /* Right Pinned 80mm Thermal Receipt */
+    .receipt-pane {
+      background: #0F172A;
+      border-left: 1px solid #334155;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .thermal-paper {
+      background: #FFFFF8;
+      color: #000;
+      border-radius: 4px;
+      padding: 18px 14px;
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 11px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      position: relative;
+    }
+    .thermal-paper::before, .thermal-paper::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      height: 6px;
+      background: radial-gradient(circle, transparent, transparent 50%, #FFFFF8 50%, #FFFFF8 100%);
+      background-size: 12px 12px;
+    }
+    .thermal-paper::before { top: -6px; }
+    .thermal-paper::after { bottom: -6px; }
+
+    .bill-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 8px; margin-bottom: 10px; }
+    .bill-title { font-weight: 700; font-size: 14px; }
+    .bill-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+    .bill-table th { border-bottom: 1px solid #000; padding: 4px 0; text-align: left; }
+    .bill-table td { padding: 4px 0; }
+    .bill-summary { border-top: 1px dashed #000; padding-top: 6px; }
+    .sum-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+
+    .tender-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .tender-btn {
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn-cash { background: #10B981; color: #FFF; }
+    .btn-upi { background: var(--color-primary, #EA580C); color: #FFF; }
+    .btn-khata { background: #6366F1; color: #FFF; grid-column: span 2; }
   </style>
 </head>
-<body>
-  <div class="top-bar">GSTIN 32AABCM1234F1Z5 // RETAIL BARCODE POS + DIGITAL KHATA PORTAL</div>
-  <header>
-    <div class="nav-container">
-      <a href="#" class="brand-logo">METRO SUPERMART POS</a>
-      <nav class="desktop-nav">
-        <a href="#catalog">Catalog / Modules</a>
-        <a href="#calculator">Interactive Calculator</a>
-        <a href="admin.html">Admin / POS Hub</a>
-      </nav>
-      <button class="btn-primary" onclick="openLeadModal()">Lookup Digital GST Bill / Pay Khata Balance</button>
+<body data-layout-archetype="tactile-pos-terminal">
+  <!-- POS Status Bar -->
+  <header class="pos-header">
+    <div class="brand-tag">
+      <span style="color:var(--color-primary);">■</span>
+      <span data-wl-brand>APEX RETAIL POS</span>
+    </div>
+    <div style="display:flex; gap:16px; align-items:center;">
+      <span class="gstin-pill">GSTIN: 29AAACA1234F1Z9</span>
+      <span>REG #01</span>
+      <span>CASHIER: RAHUL M.</span>
+      <a href="admin.html" style="color:#F59E0B; text-decoration:none; font-weight:700;">[ ADMIN HUB ]</a>
     </div>
   </header>
 
-  <section class="hero-banner">
-    <span class="hero-pill">GSTIN 32AABCM1234F1Z5 // RETAIL BARCODE POS + DIGITAL KHATA PORTAL</span>
-    <h1 data-wl-brand>METRO SUPERMART POS</h1>
-    <p data-wl-tagline>Fast barcode billing, CGST/SGST 80mm thermal receipts & digital customer udhaar khata.</p>
-    <div class="hero-actions">
-      <button class="btn-primary" onclick="openLeadModal()">Lookup Digital GST Bill / Pay Khata Balance</button>
-      <a href="#calculator" class="btn-outline">Interactive GST & Margin Calculator</a>
+  <!-- Main POS Workspace -->
+  <div class="pos-workspace">
+    <!-- Left Category Rail -->
+    <div class="cat-rail">
+      <button class="cat-btn active" onclick="filterCat('all')">ALL ITEMS</button>
+      <button class="cat-btn" onclick="filterCat('grocery')">GROCERY</button>
+      <button class="cat-btn" onclick="filterCat('dairy')">DAIRY & COLD</button>
+      <button class="cat-btn" onclick="filterCat('snacks')">BEVERAGES</button>
     </div>
-  </section>
 
-  <section class="section-wrap" id="catalog">
-    <div class="section-head">
-      <h2>Fast-Moving Barcode SKUs & Live Counter Stock</h2>
-      <div id="drawerWaText" style="font-size:12px;color:#64748B;">WhatsApp: +91 90619 02295</div>
-    </div>
-    <div class="bento-grid" id="bentoGrid"></div>
-  </section>
-
-  <section class="section-wrap" id="calculator">
-    <div class="calc-panel">
-      <div>
-        <h2 style="font-family:var(--font-accent);font-size:26px;margin-bottom:6px;">Interactive GST Invoice & Split-Tax Calculator (CGST + SGST)</h2>
-        <p style="font-size:13px;color:#64748B;margin-bottom:20px;">Calculate exact taxable value, CGST/SGST split, and 80mm thermal bill total.</p>
-        <div class="slider-group">
-          <label><span>Taxable Cart Value (₹)</span><strong id="valSliderA" style="color:var(--color-primary);">2450</strong></label>
-          <input type="range" id="sliderA" min="100" max="25000" value="2450" oninput="recalc()">
+    <!-- Center Touch Grid -->
+    <div class="item-pane">
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Type barcode / SKU name (e.g. Rice, Milk, Oil)..." oninput="searchItems(this.value)">
+      </div>
+      <div class="touch-grid" id="itemGrid">
+        <div class="touch-tile" onclick="addItem('Basmati Rice 5kg', 450, 'HSN-1006')">
+          <div class="tile-name">Basmati Rice 5kg</div>
+          <div class="tile-hsn">HSN: 1006 (GST 5%)</div>
+          <div class="tile-price">₹450.00</div>
         </div>
-        <div class="slider-group">
-          <label><span>GST Slab % (5, 12, 18, 28)</span><strong id="valSliderB" style="color:var(--color-primary);">12</strong></label>
-          <input type="range" id="sliderB" min="5" max="28" value="12" oninput="recalc()">
+        <div class="touch-tile" onclick="addItem('Cold Pressed Coconut Oil 1L', 280, 'HSN-1513')">
+          <div class="tile-name">Cold Pressed Coconut Oil 1L</div>
+          <div class="tile-hsn">HSN: 1513 (GST 5%)</div>
+          <div class="tile-price">₹280.00</div>
+        </div>
+        <div class="touch-tile" onclick="addItem('Farm Fresh Cow Milk 1L', 64, 'HSN-0401')">
+          <div class="tile-name">Farm Fresh Cow Milk 1L</div>
+          <div class="tile-hsn">HSN: 0401 (NIL)</div>
+          <div class="tile-price">₹64.00</div>
+        </div>
+        <div class="touch-tile" onclick="addItem('Roasted Arabica Beans 250g', 320, 'HSN-0901')">
+          <div class="tile-name">Roasted Arabica Beans 250g</div>
+          <div class="tile-hsn">HSN: 0901 (GST 5%)</div>
+          <div class="tile-price">₹320.00</div>
+        </div>
+        <div class="touch-tile" onclick="addItem('Alphonso Mango Pulp 850g', 190, 'HSN-2008')">
+          <div class="tile-name">Alphonso Mango Pulp 850g</div>
+          <div class="tile-hsn">HSN: 2008 (GST 12%)</div>
+          <div class="tile-price">₹190.00</div>
+        </div>
+        <div class="touch-tile" onclick="addItem('Kashmiri Saffron 1g', 390, 'HSN-0910')">
+          <div class="tile-name">Kashmiri Saffron 1g</div>
+          <div class="tile-hsn">HSN: 0910 (GST 5%)</div>
+          <div class="tile-price">₹390.00</div>
         </div>
       </div>
-      <div class="calc-result-card">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#64748B;">Net Payable Invoice Total (Incl. CGST + SGST)</div>
-        <div class="calc-result-val" id="calcOutput">₹0</div>
-        <button class="btn-primary" style="width:100%;justify-content:center;" onclick="openLeadModal()">Request Digital GST Tax Invoice / Settle Khata via UPI</button>
-      </div>
     </div>
-  </section>
 
-  <div class="modal-overlay" id="leadModal">
-    <div class="modal-box">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-        <h3 style="font-size:18px;">Request Digital GST Tax Invoice / Settle Khata via UPI</h3>
-        <button onclick="closeLeadModal()" style="background:none;border:none;color:inherit;font-size:18px;cursor:pointer;">✕</button>
+    <!-- Right 80mm Thermal Receipt -->
+    <div class="receipt-pane">
+      <div class="thermal-paper">
+        <div class="bill-header">
+          <div class="bill-title" data-wl-brand>APEX SUPERMARKET</div>
+          <div>BOM-01 CENTRAL BRANCH</div>
+          <div>TAX INVOICE: #INV-88421</div>
+          <div id="billDate"></div>
+        </div>
+
+        <table class="bill-table">
+          <thead>
+            <tr><th>ITEM</th><th>QTY</th><th style="text-align:right;">AMT</th></tr>
+          </thead>
+          <tbody id="billItems">
+            <tr><td colspan="3" style="text-align:center; color:#999; padding:12px 0;">-- TAP ITEMS TO PUNCH --</td></tr>
+          </tbody>
+        </table>
+
+        <div class="bill-summary">
+          <div class="sum-row"><span>SUBTOTAL:</span><span id="subTotal">₹0.00</span></div>
+          <div class="sum-row"><span>CGST 2.5%:</span><span id="cgst">₹0.00</span></div>
+          <div class="sum-row"><span>SGST 2.5%:</span><span id="sgst">₹0.00</span></div>
+          <div class="sum-row" style="font-weight:700; font-size:14px; margin-top:6px; border-top:1px solid #000; padding-top:4px;">
+            <span>TOTAL PAYABLE:</span>
+            <span id="grandTotal">₹0.00</span>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:10px; border-top:1px dashed #000; padding-top:8px;">
+          <div>[ SCAN UPI QR TO PAY ]</div>
+          <div style="background:#000; color:#FFF; padding:6px; margin:6px auto; width:100px; font-size:9px;">
+            UPI://PAY?PA=apex@okhdfc
+          </div>
+          <div style="font-size:10px;">THANK YOU · VISIT AGAIN!</div>
+        </div>
       </div>
-      <form onsubmit="submitLead(event)">
-        <div class="form-field"><label>Name / Business / Table *</label><input type="text" id="leadName" required placeholder="e.g. Anand Varma"></div>
-        <div class="form-field"><label>WhatsApp / Mobile Number *</label><input type="tel" id="leadPhone" required placeholder="919876543210"></div>
-        <div class="form-field"><label>Order / Ticket Details</label><input type="text" id="leadDetail" readonly></div>
-        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;">Confirm & Sync to Admin / POS</button>
-      </form>
-      <div id="leadSuccessBox" style="display:none;margin-top:14px;padding:12px;background:var(--bg-canvas);border:1px solid var(--color-primary);border-radius:4px;font-size:12px;"></div>
+
+      <div class="tender-actions">
+        <button class="tender-btn btn-cash" onclick="payTender('CASH')">[F1] CASH TENDER</button>
+        <button class="tender-btn btn-upi" onclick="payTender('UPI')">[F2] UPI QR TENDER</button>
+        <button class="tender-btn btn-khata" onclick="payTender('KHATA')">[F3] KHATA CREDIT LEDGER</button>
+      </div>
     </div>
   </div>
 
-  <a href="admin.html" class="admin-pill-floating">⚙️ Open Admin / POS Command Center</a>
-  <a id="floatingWaBtn" href="https://wa.me/919061902295" target="_blank" class="wa-float-btn">💬</a>
-
   <script>
-    const ITEMS = [
-  {
-    "code": "SKU-890101",
-    "title": "Organic Wayanad Matta Rice (10kg Bag)",
-    "sub": "HSN 1006 • GST 5% (2.5% CGST + 2.5% SGST) • Barcode 890101",
-    "metric": "₹640 (Stock: 48)",
-    "badge": "AISLE 01",
-    "img": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    "code": "SKU-890102",
-    "title": "Cold-Pressed Virgin Coconut Oil (1 Litre)",
-    "sub": "HSN 1513 • GST 5% • Pure Kuttiady Batch #44",
-    "metric": "₹320 (Stock: 36)",
-    "badge": "BESTSELLER",
-    "img": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    "code": "SKU-890103",
-    "title": "Munnar Estate Cardamom & Spice Gift Box",
-    "sub": "HSN 0908 • GST 12% • Export Grade 8mm Bold Pods",
-    "metric": "₹890 (Stock: 19)",
-    "badge": "SPICES",
-    "img": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    "code": "SKU-890104",
-    "title": "Artisanal Dark Chocolate 70% Idukki Cocoa",
-    "sub": "HSN 1806 • GST 18% (9% CGST + 9% SGST)",
-    "metric": "₹240 (Stock: 64)",
-    "badge": "CONFECTIONERY",
-    "img": "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    "code": "SKU-890105",
-    "title": "A2 Gir Cow Cultured Ghee (500ml Glass Jar)",
-    "sub": "HSN 0405 • GST 12% • Bilona Churned",
-    "metric": "₹750 (Stock: 14)",
-    "badge": "DAIRY",
-    "img": "https://images.unsplash.com/photo-1631451095765-2c91616fc9e6?auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    "code": "SKU-890106",
-    "title": "Roasted Cashew W240 Jumbo Pack (500g)",
-    "sub": "HSN 0801 • GST 5% • Kollam Factory Direct",
-    "metric": "₹580 (Stock: 29)",
-    "badge": "DRY FRUITS",
-    "img": "https://images.unsplash.com/photo-1509358271058-acd22cc93898?auto=format&fit=crop&w=800&q=80"
-  }
-];
-    let selectedTitle = ITEMS[0].title;
-    let calcFormatted = '';
+    document.getElementById('billDate').textContent = new Date().toLocaleString();
+    let cart = [];
 
-    function renderGrid() {
-      document.getElementById('bentoGrid').innerHTML = ITEMS.map((it, i) => `
-        <article class="bento-card" onclick="selectItem(${i})">
-          <div class="bento-img-wrap">
-            <img src="${it.img}" alt="${it.title}" loading="lazy">
-            <span class="bento-badge">${it.badge}</span>
-          </div>
-          <div class="bento-body">
-            <div class="bento-code">${it.code}</div>
-            <div class="bento-title">${it.title}</div>
-            <div class="bento-sub">${it.sub}</div>
-            <div class="bento-footer"><span>${it.metric}</span><span>Select →</span></div>
-          </div>
-        </article>
-      `).join('');
+    function addItem(name, price, hsn) {
+      const exist = cart.find(i => i.name === name);
+      if (exist) { exist.qty++; } else { cart.push({ name, price, hsn, qty: 1 }); }
+      renderReceipt();
     }
 
-    function recalc() {
-      const team = Number(document.getElementById('sliderA').value);
-      const hours = Number(document.getElementById('sliderB').value);
-      document.getElementById('valSliderA').textContent = team;
-      document.getElementById('valSliderB').textContent = hours;
-      const val = Math.round(team * (1 + hours / 100));
-      calcFormatted = '₹' + Number(val).toLocaleString('en-IN');
-      document.getElementById('calcOutput').textContent = calcFormatted;
+    function renderReceipt() {
+      const tbody = document.getElementById('billItems');
+      if (cart.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#999; padding:12px 0;">-- TAP ITEMS TO PUNCH --</td></tr>';
+        document.getElementById('subTotal').textContent = '₹0.00';
+        document.getElementById('cgst').textContent = '₹0.00';
+        document.getElementById('sgst').textContent = '₹0.00';
+        document.getElementById('grandTotal').textContent = '₹0.00';
+        return;
+      }
+      let sub = 0;
+      tbody.innerHTML = cart.map(item => {
+        const itemTotal = item.price * item.qty;
+        sub += itemTotal;
+        return `<tr><td>${item.name}</td><td>${item.qty}</td><td style="text-align:right;">₹${itemTotal}</td></tr>`;
+      }).join('');
+
+      const tax = sub * 0.025;
+      const total = sub + (tax * 2);
+      document.getElementById('subTotal').textContent = '₹' + sub.toFixed(2);
+      document.getElementById('cgst').textContent = '₹' + tax.toFixed(2);
+      document.getElementById('sgst').textContent = '₹' + tax.toFixed(2);
+      document.getElementById('grandTotal').textContent = '₹' + total.toFixed(2);
     }
 
-    function selectItem(idx) {
-      selectedTitle = ITEMS[idx].title + ' (' + ITEMS[idx].metric + ')';
-      openLeadModal();
+    function payTender(mode) {
+      if (cart.length === 0) { alert('Cart is empty. Tap products to punch bill.'); return; }
+      const tot = document.getElementById('grandTotal').textContent;
+      alert('Tender settled via ' + mode + ' for ' + tot + '! Receipt printing to 80mm thermal cutter...');
+      cart = [];
+      renderReceipt();
     }
 
-    function openLeadModal() {
-      document.getElementById('leadDetail').value = selectedTitle + ' • Total: ' + calcFormatted;
-      document.getElementById('leadSuccessBox').style.display = 'none';
-      document.getElementById('leadModal').classList.add('open');
+    function searchItems(val) {
+      const tiles = document.querySelectorAll('.touch-tile');
+      tiles.forEach(t => {
+        const txt = t.textContent.toLowerCase();
+        t.style.display = txt.includes(val.toLowerCase()) ? 'flex' : 'none';
+      });
     }
 
-    function closeLeadModal() {
-      document.getElementById('leadModal').classList.remove('open');
+    function filterCat(cat) {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
     }
-
-    function submitLead(e) {
-      e.preventDefault();
-      const entry = {
-        id: 'TX-' + Math.floor(1000 + Math.random() * 9000),
-        name: document.getElementById('leadName').value.trim(),
-        phone: document.getElementById('leadPhone').value.trim(),
-        detail: document.getElementById('leadDetail').value.trim(),
-        amount: calcFormatted,
-        status: 'LIVE // QUEUED'
-      };
-      try {
-        const list = JSON.parse(localStorage.getItem('bmad_leads_tpl-serp-retail-pos-gst') || '[]');
-        list.unshift(entry);
-        localStorage.setItem('bmad_leads_tpl-serp-retail-pos-gst', JSON.stringify(list));
-      } catch (err) {}
-      const box = document.getElementById('leadSuccessBox');
-      box.style.display = 'block';
-      box.innerHTML = '✓ Dispatched (' + entry.id + ')! Open <a href="admin.html" style="color:var(--color-primary);font-weight:700;">Admin / POS Hub</a> to process.';
-    }
-
-    renderGrid();
-    recalc();
   </script>
 </body>
 </html>

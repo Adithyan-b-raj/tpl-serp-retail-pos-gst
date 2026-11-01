@@ -1,17 +1,31 @@
-/* Extracted via tpl-tools-design-extractor for tpl-serp-retail-pos-gst */
+/* ==========================================================================
+   BMAD Normalized Design Tokens & Movement Blueprint (theme-tokens.css)
+   Movement  : [M] Tactile App-Shell Touch POS & Thermal KOT
+   Archetype : 3-Column Touch POS Register, Table Map & Thermal KOT Ticket (Square POS / Toast)
+   Reference : https://squareup.com/us/en/point-of-sale/restaurants
+   Contract  : whitelabel-and-showroom-contract.md §2 + design-movements-and-layout-blueprints.md
+   ========================================================================== */
+
 :root {
-  --font-primary: 'Inter', sans-serif;
-  --font-accent: 'Space Grotesk', sans-serif;
-  --color-primary: #0284C7;
+  --font-primary: 'Plus Jakarta Sans', sans-serif;
+  --font-accent: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-primary: #EA580C;
   --brand-primary: var(--color-primary);
-  --color-dark: #0F172A;
+
+  --color-dark: #111827;
   --brand-dark: var(--color-dark);
-  --bg-main: #F8FAFC;
-  --bg-canvas: #EFF6FF;
+
+  --bg-main: #E2E8F0;
+  --bg-canvas: #FFFFFF;
   --bg-sand: var(--bg-canvas);
+
   --border-color: #CBD5E1;
-  --grid-gap-desktop: 28px 22px;
-  --grid-gap-mobile: 16px 14px;
-  --radius: 6px;
+  --border-structural: 1px solid #CBD5E1;
+  --shadow-token: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --grid-gap-desktop: 10px;
+  --grid-gap-mobile: 8px;
+  --radius: 8px;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
