@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  app:
+    image: akaunting/akaunting:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8000"
+    environment:
+      - BRAND_NAME=METRO SUPERMART POS
+      - PRIMARY_COLOR=#0284C7
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=bmad
+      - POSTGRES_PASSWORD=bmad_secret
+      - POSTGRES_DB=tpl_serp_retail_pos_gst
